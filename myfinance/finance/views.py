@@ -17,7 +17,9 @@ def random_account(request):
     response = first.read()
     end = open('finance\\table\\end.html', 'r')
     for i in account:
-        response += '<tr><td>{0}</td></tr>'.format(i.value())
+        response += '<tr><td>{0}</td>'.format(i.value())
+        response += '<td>{0}</td></tr>'.format(i.cause())
+
     response += '</tbody></table></div>'
     response += '<div class="container"><p style="text-align:right"><b>Your total: {0}</p></div>'.format(account.get_total())
     response += '<div class="control-group"><p style="text-align:center"><a class="btn btn-primary btn-lg" href="../" role="button">Home</a></p></div>'
