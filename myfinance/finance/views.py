@@ -1,31 +1,38 @@
 from django.shortcuts import render
-from django.http import HttpResponse
-from finance.controller import Account
-from finance.controller import Charge
 from finance import controller
+from finance.form_validation import InputForm
+from decimal import Decimal
+from datetime import date
 
 
 def home(request):
-    home_page = open('finance\\home\\home.html', 'r')
-    response = home_page.read()
-    return HttpResponse(response)
+    return render(request, 'home.html')
 
 
-def random_account(request):
+def random_example(request):
     account = controller.random_account()
-    first = open('finance\\table\\first.html', 'r')
-    response = first.read()
-    end = open('finance\\table\\end.html', 'r')
-    for i in account:
-        response += '<tr><td>{0}</td>'.format(i.value())
-        response += '<td>{0}</td></tr>'.format(i.cause())
+    return render(
+        request, 'table.html',
+        {'account': account}
+    )
 
-    response += '</tbody></table></div>'
-    response += '<div class="container"><p style="text-align:right"><b>Your total: {0}</p></div>'.format(account.get_total())
-    response += '<div class="control-group"><p style="text-align:center"><a class="btn btn-primary btn-lg" href="../" role="button">Home</a></p></div>'
 
-    response += end.read()
-    return HttpResponse(response)
+def add_charge(request):
+    if request.method == 'POST':
+        print(2)
+        form = InputForm(request.POST)
+        info = 'Форма заполнена, но некорректна'
+
+        if form.is_valid():
+            info = 'Форма заполнена и корректна'
+
+    else:
+        info = 'Форма не заполнена'
+        form = InputForm(initial={'value': Decimal(100), 'charge_date': date.today()})
+    return render(
+        request, 'input.html',
+        {'form': form, 'info': info}
+    )
 
 
 # Create your views here.

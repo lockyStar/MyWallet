@@ -1,0 +1,86 @@
+{% extends "base.html" %}
+{% block content %}
+    <div class="jumbotron" style ="background-color:#e0e0e0" >
+      <div class="container" style="text-align:center">
+
+		<h1>My wallet</h1>
+		</div>
+    </div>
+
+    <div class="container" style="text-align:center">
+        {% for charge in account %}
+            {% if forloop.first %}
+                <h2>Income</h2>
+                </br>
+                <table class="table"  >
+                    <thead>
+                        <tr>
+                            <th style="text-align:center">Charge</th>
+                            <th style="text-align:center">Purchase</th>
+                            <th style="text-align:center">Date</th>
+                        </tr>
+                    </thead>
+				    <tbody>
+            {% endif %}
+            {% if charge.value >= 0 %}
+                        <tr>
+                            <td>{{charge.value}}</td>
+                            <td>{{charge.cause}}</td>
+                            <td>{{charge.date}}</td>
+
+                        </tr>
+            {% endif %}
+
+            {% if forloop.last %}
+                    </tbody>
+                </table>
+            {% endif %}
+        {% endfor %}
+    </div>
+    </br>
+    </br>
+
+    <div class="container" style="text-align:center">
+        {% for charge in account %}
+            {% if forloop.first %}
+                <h2>Outcome</h2>
+                </br>
+                <table class="table"  >
+                    <thead>
+                        <tr>
+                            <th style="text-align:center">Charge</th>
+                            <th style="text-align:center">Purchase</th>
+                            <th style="text-align:center">Date</th>
+                        </tr>
+                    </thead>
+				    <tbody>
+            {% endif %}
+            {% if charge.value <= 0 %}
+                        <tr>
+                            <td>{{charge.value}}</td>
+                            <td>{{charge.cause}}</td>
+                            <td>{{charge.date}}</td>
+
+                        </tr>
+            {% endif %}
+
+            {% if forloop.last %}
+                    </tbody>
+                </table>
+            {% endif %}
+        {% endfor %}
+        <div class="container">
+            <p style="text-align:right">
+                <b>Your total: {{account.get_total}}</b>
+            </p>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="control-group">
+            <p style="text-align:center">
+                <a class="btn btn-primary btn-lg" href="../" role="button">Home</a>
+            </p>
+        </div>
+    </div>
+{% endblock %}
