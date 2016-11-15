@@ -10,7 +10,7 @@
         <h2>Сообщение отладки (info)</h2>
         {{ info }}
 
-        <form action="{% url 'add_charge' %}" method="post">
+        <form class="form" action="{% url 'add_charge' %}" method="post">
             {% for field,errors in form.errors.items %}
                 {% for error in errors %}
                 {% if forloop.first %}
