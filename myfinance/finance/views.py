@@ -21,11 +21,11 @@ def account_status(request, account_id=0):
     account = controller.random_account()
     return render(
         request, 'table.html',
-        {'account': account}
+        {'account': account, 'account_id': account_id}
     )
 
 
-def add_charge(request):
+def add_charge(request, account_id=0):
     if request.method == 'POST':
         print(2)
         form = ChargeForm(request.POST)
@@ -37,9 +37,10 @@ def add_charge(request):
     else:
         info = 'Form is not filled'
         form = ChargeForm(initial={'value': Decimal(100), 'date': date.today()})
+
     return render(
         request, 'input.html',
-        {'form': form, 'info': info}
+        {'form': form, 'info': info, 'account_id': account_id}
     )
 
 
