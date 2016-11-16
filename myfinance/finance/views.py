@@ -7,7 +7,6 @@ from finance.models import Account
 from finance.form_validation import ChargeForm, GetAccountsListForm
 
 def home(request):
-    print(Account.objects.only('total').values('total'))
     if request.method == 'POST':
         form = GetAccountsListForm(request.POST)
         if form.is_valid():

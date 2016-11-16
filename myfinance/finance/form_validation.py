@@ -42,5 +42,5 @@ class AccountForm(ModelForm):
 
 
 class GetAccountsListForm(forms.Form):
-    account = forms.ModelChoiceField(queryset=Account.objects.all().values('account_number'), initial=0, to_field_name='name', required=True)
+    account = forms.ModelChoiceField(queryset=Account.objects.all(), initial=0, to_field_name='account_number')
 
