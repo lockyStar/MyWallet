@@ -1,12 +1,24 @@
 from django.shortcuts import render
+from django.shortcuts import redirect
 from finance import controller
 from decimal import Decimal
 from datetime import date
-from finance.form_validation import ChargeForm
+from finance.models import Account
+from finance.form_validation import ChargeForm, GetAccountsListForm
 
 
 def home(request):
-    return render(request, 'home.html')
+    print(Account.objects.only('total').values('total'))
+    if request.method == 'POST':
+        form = ChargeForm(request.POST)
+
+        if form.is_valid():
+            return redirect('status', form.account)
+    else:
+        form = GetAccountsListForm()
+
+    return render(request, 'home.html',
+                  )
 
 
 def random_example(request):

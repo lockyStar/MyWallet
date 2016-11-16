@@ -1,7 +1,8 @@
-from django.forms import Form, fields, widgets
+from django import forms
 from django.core.exceptions import ValidationError
 from datetime import date
 from django.forms import ModelForm
+from django.db.models import F
 from finance.models import Charge, Account
 
 
@@ -38,3 +39,8 @@ class AccountForm(ModelForm):
     class Meta:
         model = Account
         fields = ['name']
+
+
+class GetAccountsListForm(forms.Form):
+    account = forms.ModelChoiceField(queryset=Account.objects.only('account_number').values('account_number'), initial=0, to_field_name='name', required=True)
+
