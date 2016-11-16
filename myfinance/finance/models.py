@@ -10,6 +10,9 @@ class Account(models.Model):
     total = models.DecimalField(decimal_places=2,max_digits=15)
     account_number = models.BigIntegerField()
 
+    def __str__(self):
+        return str(self.account_number)
+
     class Meta:
         db_table = 'accounts'
 
