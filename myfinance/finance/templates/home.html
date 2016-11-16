@@ -25,22 +25,8 @@
 		<div class="container" style="padding:75px">
 			<div style="text-align:center">
 				<form class="form" action="{% url 'home' %}" method="post">
-					{% for field in form.visible_fields %}
-						<h3>{{ field.label }}</h3>
-						{% for error in field.errors %}
-							{% if forloop.first %}
-								<h4>Ошибки поля</h4>
-								<ul>
-							{% endif %}
-							<li>{{ error }}</li>
-							{% if forloop.last %}
-								</ul>
-							{% endif %}
-						{% endfor %}
-						<br>
-					{{ field }}
-					{% endfor %}
-
+					{{ form }}
+					</br>
 					<button type="submit" class="btn btn-primary btn-lg">Submit</button>
 				</form>
 			</div>
