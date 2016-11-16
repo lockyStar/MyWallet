@@ -17,6 +17,14 @@ def random_example(request):
     )
 
 
+def account_status(request, account_id=0):
+    account = controller.random_account()
+    return render(
+        request, 'table.html',
+        {'account': account}
+    )
+
+
 def add_charge(request):
     if request.method == 'POST':
         print(2)

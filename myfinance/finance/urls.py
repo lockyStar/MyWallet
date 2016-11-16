@@ -1,10 +1,9 @@
 from django.conf.urls import url
-from finance.views import home
-from finance.views import random_example
-from finance.views import add_charge
+from finance.views import home,add_charge,account_status,random_example
 
 urlpatterns = [
     url(r'^$', home),
     url(r'^charges/$', random_example),
-    url(r'^apply/$', add_charge, name='add_charge')
+    url(r'^charges/(?P<account_id>\d{1,16})/$', account_status),
+    url(r'^addcharge/(?P<account_id>\d{0,16})/$', add_charge, name='add_charge')
     ]
