@@ -1,42 +1,40 @@
 from django.forms import Form, fields, widgets
 from django.core.exceptions import ValidationError
 from datetime import date
+from django.forms import ModelForm
+from finance.models import Charge, Account
 
-class InputForm(Form):
 
-    value = fields.DecimalField(
-        label='Сумма',
-        decimal_places=2,
-        required=True,
-        widget=widgets.NumberInput()
-    )
-    charge_date = fields.DateField(
-        label='Дата',
-        required=True,
-        widget=widgets.DateInput()
-    )
-
-    def clean(self):
-
-        value = self.clean_value()
-        charge_date = self.clean_date()
-        print(value)
-
-        print(charge_date)
-        if (value <= 0)and(charge_date >= date.today()):
-            raise ValidationError('Нельзя потратить деньги в будущем')
-
+class ChargeForm(ModelForm):
+    class Meta:
+        model = Charge
+        fields = ['value', 'date']
 
     def clean_date(self):
         try:
-            charge_date = self.cleaned_data.get('charge_date')
+            date = self.cleaned_data.get('date')
         except:
-            raise ValidationError('Неверный денежный формат')
-        return charge_date
+            raise ValidationError('Invalid data input')
+        return date
 
     def clean_value(self):
         try:
             value = self.cleaned_data.get('value')
         except:
-            raise ValidationError('Неверный формат даты')
+            raise ValidationError('Invalid money input')
         return value
+
+    def clean(self):
+
+        value = self.clean_value()
+        date = self.clean_date()
+        print(value)
+        print(date)
+        if (value <= 0)and(date >= date.today()):
+            raise ValidationError('You can not spend money in the future')
+
+
+class AccountForm(ModelForm):
+    class Meta:
+        model = Account
+        fields = ['name']
