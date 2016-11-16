@@ -21,13 +21,13 @@ def add_charge(request):
     if request.method == 'POST':
         print(2)
         form = ChargeForm(request.POST)
-        info = 'Форма заполнена, но некорректна'
+        info = 'Form is filled, but not correct'
 
         if form.is_valid():
-            info = 'Форма заполнена и корректна'
+            info = 'Form is filled and correct'
 
     else:
-        info = 'Форма не заполнена'
+        info = 'Form is not filled'
         form = ChargeForm(initial={'value': Decimal(100), 'date': date.today()})
     return render(
         request, 'input.html',

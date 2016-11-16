@@ -14,14 +14,14 @@ class ChargeForm(ModelForm):
         try:
             date = self.cleaned_data.get('date')
         except:
-            raise ValidationError('Неверный формат даты')
+            raise ValidationError('Invalid data input')
         return date
 
     def clean_value(self):
         try:
             value = self.cleaned_data.get('value')
         except:
-            raise ValidationError('Неверный денежный формат')
+            raise ValidationError('Invalid money input')
         return value
 
     def clean(self):
@@ -31,7 +31,7 @@ class ChargeForm(ModelForm):
         print(value)
         print(date)
         if (value <= 0)and(date >= date.today()):
-            raise ValidationError('Нельзя потратить деньги в будущем')
+            raise ValidationError('You can not spend money in the future')
 
 
 class AccountForm(ModelForm):
