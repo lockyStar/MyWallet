@@ -42,21 +42,5 @@ class AccountForm(ModelForm):
 
 
 class GetAccountsListForm(forms.Form):
-    account = forms.ModelChoiceField(queryset=Account.objects.all(), initial=0, to_field_name='name', required=True)
+    account = forms.ModelChoiceField(queryset=Account.objects.all().values('account_number'), initial=0, to_field_name='name', required=True)
 
-
-class DropDown(forms.Form):
-    account = forms.ChoiceField()
-
-    def __init__(self, *args, **kwargs):
-        self.categories = kwargs.pop("categories", None)
-        super(DropDown, self).__init__(*args, **kwargs)
-
-        CHOICES = ()
-
-        for category in self.categories:
-            # CHOICES for ChoiceField needs to be a list of tuples (value, representation),
-            # with value=actual value of choice and representation=how it will be displayed
-            CHOICES += ((category, category),)
-
-        self.fields["account"].choices = CHOICES

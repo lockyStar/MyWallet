@@ -4,18 +4,15 @@ from finance import controller
 from decimal import Decimal
 from datetime import date
 from finance.models import Account
-from finance.form_validation import ChargeForm, GetAccountsListForm, DropDown
-
+from finance.form_validation import ChargeForm, GetAccountsListForm
 
 def home(request):
     print(Account.objects.only('total').values('total'))
     if request.method == 'POST':
-        #form = DropDown(request.POST)
         form = GetAccountsListForm(request.POST)
         if form.is_valid():
             return redirect('status', form.cleaned_data.get('account').account_number)
     else:
-        #form = DropDown(categories=Account.objects.order_by('account_number').values_list('account_number', flat=True).distinct())
         form = GetAccountsListForm()
     return render(request, 'home.html',
                   {'form': form})
