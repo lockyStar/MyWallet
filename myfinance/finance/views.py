@@ -4,7 +4,8 @@ from finance import controller
 from decimal import Decimal
 from datetime import date
 from finance.models import Account, Charge
-from finance.form_validation import ChargeForm, GetAccountsListForm
+from finance.form_validation import ChargeForm, GetAccountsListForm, AccountForm
+from random import randint
 
 def home(request):
     if request.method == 'POST':
@@ -53,5 +54,28 @@ def add_charge(request, account_id=0):
         {'form': form, 'info': info, 'account_id': account_id}
     )
 
+def add_Account(request):
+    if request.method=='POST':
+        print(3)
+        form = Account_Form(request.POST)
+        info = 'Account is filled, but not correct'
+        if form.is_valid():
 
-# Create your views here.
+            info = 'Account is filled and correct'
+            name = AccountForm.clean_name(form)
+            total=AccountForm.clean_total(form)
+            account_number=randint(0,100000)
+
+
+
+            b=Account_Form(name=name, total=total, account_number=account_number)
+            b.save()
+    else:
+        info = 'Account is not filled'
+        form = AccountForm()
+    return render(
+        request, 'inputAccount.html',
+        {'form': form, 'info': info,}
+        )
+
+
