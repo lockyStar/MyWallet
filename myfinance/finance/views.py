@@ -3,7 +3,7 @@ from django.shortcuts import redirect
 from finance import controller
 from decimal import Decimal
 from datetime import date
-from finance.models import Account
+from finance.models import Account, Charge
 from finance.form_validation import ChargeForm, GetAccountsListForm
 
 def home(request):
@@ -26,10 +26,12 @@ def random_example(request):
 
 
 def account_status(request, account_id=0):
+    charges = list(Charge.objects.filter(account_id=account_id))
+    print(charges)
     account = controller.random_account()
     return render(
         request, 'table.html',
-        {'account': account, 'account_id': account_id}
+        {'account': charges, 'account_id': account_id}
     )
 
 
