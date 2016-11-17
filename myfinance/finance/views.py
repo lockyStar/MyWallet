@@ -3,22 +3,19 @@ from django.shortcuts import redirect
 from finance import controller
 from decimal import Decimal
 from datetime import date
-from finance.models import Account
+from finance.models import Account, Charge
 from finance.form_validation import ChargeForm, GetAccountsListForm, AccountForm
 from random import randint
 
 def home(request):
-    print(Account.objects.only('total').values('total'))
     if request.method == 'POST':
-        form = ChargeForm(request.POST)
-
+        form = GetAccountsListForm(request.POST)
         if form.is_valid():
-            return redirect('status', form.account)
+            return redirect('status', form.cleaned_data.get('account').account_number)
     else:
         form = GetAccountsListForm()
-
     return render(request, 'home.html',
-                  )
+                  {'form': form})
 
 
 def random_example(request):
@@ -30,10 +27,12 @@ def random_example(request):
 
 
 def account_status(request, account_id=0):
+    charges = list(Charge.objects.filter(account_id=account_id))
+    print(charges)
     account = controller.random_account()
     return render(
         request, 'table.html',
-        {'account': account, 'account_id': account_id}
+        {'account': charges, 'account_id': account_id}
     )
 
 
@@ -45,10 +44,6 @@ def add_charge(request, account_id=0):
 
         if form.is_valid():
             info = 'Form is filled and correct'
-            acc = Account.objects.get(account_number=account_id)
-            charg = form.save(commit=False)
-            charg.account_id = acc.id
-            charg.save()
 
     else:
         info = 'Form is not filled'
@@ -84,4 +79,3 @@ def add_Account(request):
         )
 
 
-# Create your views here.

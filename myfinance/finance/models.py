@@ -22,7 +22,7 @@ class Charge(models.Model):
     date = models.DateField()
     category = models.CharField(max_length=100)
     purpose = models.CharField(max_length=150)
-    account = models.ForeignKey(Account, related_name='+')
+    account_id = models.ForeignKey(Account, related_name='+')
 
     class Meta:
         db_table = 'charges'
