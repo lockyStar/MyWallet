@@ -41,6 +41,10 @@ def add_charge(request, account_id=0):
 
         if form.is_valid():
             info = 'Form is filled and correct'
+            acc = Account.objects.get(account_number=account_id)
+            charg = form.save(commit=False)
+            charg.account_id = acc.id
+            charg.save()
 
     else:
         info = 'Form is not filled'
