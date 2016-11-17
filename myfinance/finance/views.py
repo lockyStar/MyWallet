@@ -34,7 +34,7 @@ def account_status(request, account_id=0):
     account = controller.random_account()
     return render(
         request, 'table.html',
-        {'account': charges, 'account_id': account_id}
+        {'account': charges, 'account_id': account_id, 'total': acc.total}
     )
 
 
@@ -49,6 +49,8 @@ def add_charge(request, account_id=0):
             acc = Account.objects.get(account_number=account_id)
             charg = form.save(commit=False)
             charg.account_id = acc.id
+            acc.total += charg.value
+            acc.save()
             charg.save()
             return redirect('status', account_id)
 
@@ -69,17 +71,17 @@ def add_account(request):
         info = 'Account is filled, but not correct'
         if form.is_valid():
             info = 'Account is filled and correct'
-            name = AccountForm.clean_name(form)
-            total = AccountForm.clean_total(form)
-            account_number = randint(0, 100000)
-            b = AccountForm(name=name, total=total, account_number=account_number)
-            b.save()
+            number = randint(0, 100000)
+            acc = form.save(commit=False)
+            acc.account_number = number
+            acc.save()
+            return redirect('status', number)
     else:
         info = 'Account is not filled'
         form = AccountForm()
     return render(
-        request, 'inputAccount.html',
-        {'form': form, 'info': info,}
+        request, 'accountinput.html',
+        {'form': form, 'info': info}
         )
 
 
