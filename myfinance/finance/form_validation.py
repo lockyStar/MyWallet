@@ -38,7 +38,20 @@ class ChargeForm(ModelForm):
 class AccountForm(ModelForm):
     class Meta:
         model = Account
-        fields = ['name']
+        fields = ['name','total']
+    def clean_name(self):
+        try:
+            name = self.cleaned_data.get('name')
+        except:
+            raise ValidationError('Invalid name input')
+        return name
+
+    def clean_total(self):
+        try:
+            total = self.cleaned_data.get('total')
+        except:
+            raise ValidationError('Invalid total input')
+        return total
 
 
 class GetAccountsListForm(forms.Form):
