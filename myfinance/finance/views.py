@@ -34,7 +34,7 @@ def account_status(request, account_id=0):
     account = controller.random_account()
     return render(
         request, 'table.html',
-        {'account': charges, 'account_id': account_id, 'total': acc.total}
+        {'account': charges, 'account_id': account_id, 'acc': acc}
     )
 
 
