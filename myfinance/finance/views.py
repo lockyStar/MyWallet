@@ -57,8 +57,7 @@ def send_total(request, account_id):
 def account_status(request, account_id=0):
     acc = Account.objects.get(account_number=account_id)
     charges = list(Charge.objects.filter(account=acc.id).order_by('date'))
-
-
+    getTotalLine(charges, acc.total)
     return render(
         request, 'table.html',
         {'account': charges, 'account_id': account_id, 'acc': acc}

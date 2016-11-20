@@ -13,9 +13,7 @@ def getTotalLine (charges, total):
         x.append(charge.date)
         y.append(total)
         total -= charge.value
-    filename = 'total.pdf'
-    pp = PdfPages(filename)
-    plt.plot(x,y)
-    pp.savefig()
-    pp.close()
+    filename = 'total.jpg'
+    plt.plot(x, y)
+    plt.savefig('total.png', format='png')
     return filename
