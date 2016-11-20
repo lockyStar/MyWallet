@@ -14,7 +14,7 @@ from finance.form_validation import ChargeForm, GetAccountsListForm, AccountForm
 from random import randint
 from finance.statistics import getTotalLine
 from pathlib import Path
-
+from django.db import transaction
 
 
 def home(request):
@@ -73,13 +73,14 @@ def add_charge(request, account_id=0):
 
         if form.is_valid():
             info = 'Form is filled and correct'
-            acc = Account.objects.get(account_number=account_id)
-            charg = form.save(commit=False)
-            charg.account_id = acc.id
-            acc.total += charg.value
-            acc.save()
-            charg.save()
-            return redirect('status', account_id)
+            with transaction.atomic():
+                acc = Account.objects.get(account_number=account_id)
+                charg = form.save(commit=False)
+                charg.account_id = acc.id
+                acc.total += charg.value
+                acc.save()
+                charg.save()
+                return redirect('status', account_id)
 
     else:
         info = 'Form is not filled'
@@ -98,11 +99,12 @@ def add_account(request):
         info = 'Account is filled, but not correct'
         if form.is_valid():
             info = 'Account is filled and correct'
-            number = randint(0, 100000)
-            acc = form.save(commit=False)
-            acc.account_number = number
-            acc.save()
-            return redirect('status', number)
+            with transaction.atomic():
+                number = randint(0, 100000)
+                acc = form.save(commit=False)
+                acc.account_number = number
+                acc.save()
+                return redirect('status', number)
     else:
         info = 'Account is not filled'
         form = AccountForm()
