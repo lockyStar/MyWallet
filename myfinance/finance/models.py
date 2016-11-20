@@ -20,9 +20,9 @@ class Account(models.Model):
 class Charge(models.Model):
     value = models.DecimalField(decimal_places=2, max_digits=10)
     date = models.DateField()
-    category = models.CharField(max_length=100)
-    purpose = models.CharField(max_length=150)
-    account_id = models.ForeignKey(Account, related_name='+')
+    category = models.CharField(max_length=100, blank=True)
+    purpose = models.CharField(max_length=150, blank=True)
+    account = models.ForeignKey(Account, related_name='+')
 
     class Meta:
         db_table = 'charges'
