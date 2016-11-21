@@ -9,7 +9,7 @@ from finance.models import Charge, Account
 class ChargeForm(ModelForm):
     class Meta:
         model = Charge
-        fields = ['value', 'date']
+        fields = ['value', 'date', 'purpose', 'category']
 
     def clean_date(self):
         try:

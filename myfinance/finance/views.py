@@ -1,11 +1,21 @@
+import os
+from wsgiref.util import FileWrapper
+
+from django.http import HttpResponse
+
 from django.shortcuts import render
 from django.shortcuts import redirect
+from django.utils.encoding import smart_str
 from finance import controller
 from decimal import Decimal
 from datetime import date
 from finance.models import Account, Charge
 from finance.form_validation import ChargeForm, GetAccountsListForm, AccountForm
 from random import randint
+from finance.statistics import getTotalLine
+from pathlib import Path
+from django.db import transaction
+
 
 def home(request):
     if request.method == 'POST':
@@ -26,13 +36,31 @@ def random_example(request):
     )
 
 
+def send_total(request, account_id):
+    acc = Account.objects.get(account_number=account_id)
+    charges = list(Charge.objects.filter(account=acc.id).order_by('date'))
+
+    file_name = getTotalLine(charges, acc.total)
+    file = Path(file_name)
+    if os.path.exists(file_name):
+        # response = HttpResponse(FileWrapper(file.getvalue()), content_type='application/pdf')
+        # response['Content-Disposition'] = 'attachment; filename=total.pdf'
+        response = HttpResponse(content_type='application/force-download') # mimetype is replaced by content_type for django 1.7
+        response['Content-Disposition'] = 'attachment; filename=%s' % smart_str(file_name)
+        response['Content-Length'] = ''
+    # It's usually a good idea to set the 'Content-Length' header too.
+    # You can also set any other required headers: Cache-Control, etc.
+    return response
+
+
+
 def account_status(request, account_id=0):
-    charges = list(Charge.objects.filter(account_id=account_id))
-    print(charges)
-    account = controller.random_account()
+    acc = Account.objects.get(account_number=account_id)
+    charges = list(Charge.objects.filter(account=acc.id).order_by('date'))
+    getTotalLine(charges, acc.total)
     return render(
         request, 'table.html',
-        {'account': charges, 'account_id': account_id}
+        {'account': charges, 'account_id': account_id, 'acc': acc}
     )
 
 
@@ -44,6 +72,14 @@ def add_charge(request, account_id=0):
 
         if form.is_valid():
             info = 'Form is filled and correct'
+            with transaction.atomic():
+                acc = Account.objects.get(account_number=account_id)
+                charg = form.save(commit=False)
+                charg.account_id = acc.id
+                acc.total += charg.value
+                acc.save()
+                charg.save()
+                return redirect('status', account_id)
 
     else:
         info = 'Form is not filled'
@@ -54,28 +90,26 @@ def add_charge(request, account_id=0):
         {'form': form, 'info': info, 'account_id': account_id}
     )
 
-def add_Account(request):
-    if request.method=='POST':
+
+def add_account(request):
+    if request.method == 'POST':
         print(3)
-        form = Account_Form(request.POST)
+        form = AccountForm(request.POST)
         info = 'Account is filled, but not correct'
         if form.is_valid():
-
             info = 'Account is filled and correct'
-            name = AccountForm.clean_name(form)
-            total=AccountForm.clean_total(form)
-            account_number=randint(0,100000)
-
-
-
-            b=Account_Form(name=name, total=total, account_number=account_number)
-            b.save()
+            with transaction.atomic():
+                number = randint(0, 100000)
+                acc = form.save(commit=False)
+                acc.account_number = number
+                acc.save()
+                return redirect('status', number)
     else:
         info = 'Account is not filled'
         form = AccountForm()
     return render(
-        request, 'inputAccount.html',
-        {'form': form, 'info': info,}
+        request, 'accountinput.html',
+        {'form': form, 'info': info}
         )
 
 

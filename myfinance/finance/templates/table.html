@@ -16,7 +16,8 @@
                     <thead>
                         <tr>
                             <th style="text-align:center">Charge</th>
-                            <th style="text-align:center">Purchase</th>
+                            <th style="text-align:center">Purpose</th>
+                            <th style="text-align:center">Category</th>
                             <th style="text-align:center">Date</th>
                         </tr>
                     </thead>
@@ -25,7 +26,16 @@
             {% if charge.value >= 0 %}
                         <tr>
                             <td>{{charge.value}}</td>
-                            <td>{{charge.account_id}}</td>
+                            {% if charge.purpose != "" %}
+                                <td>{{charge.purpose}}</td>
+                            {% else %}
+                                <td>-</td>
+                            {% endif %}
+                            {% if charge.category != "" %}
+                                <td>{{charge.category}}</td>
+                            {% else %}
+                                <td>-</td>
+                            {% endif %}
                             <td>{{charge.date}}</td>
 
                         </tr>
@@ -49,7 +59,8 @@
                     <thead>
                         <tr>
                             <th style="text-align:center">Charge</th>
-                            <th style="text-align:center">Purchase</th>
+                            <th style="text-align:center">Purpose</th>
+                            <th style="text-align:center">Category</th>
                             <th style="text-align:center">Date</th>
                         </tr>
                     </thead>
@@ -58,7 +69,16 @@
             {% if charge.value <= 0 %}
                         <tr>
                             <td>{{charge.value}}</td>
-                            <td>{{charge.account_id}}</td>
+                            {% if charge.purpose != "" %}
+                                <td>{{charge.purpose}}</td>
+                            {% else %}
+                                <td>-</td>
+                            {% endif %}
+                            {% if charge.category != "" %}
+                                <td>{{charge.category}}</td>
+                            {% else %}
+                                <td>-</td>
+                            {% endif %}
                             <td>{{charge.date}}</td>
 
                         </tr>
@@ -71,8 +91,16 @@
         {% endfor %}
         <div class="container">
             <p style="text-align:right">
-                <b>Your total: {{account.get_total}}</b>
+                <b>Your total: {{acc.total}}</b>
             </p>
+        </div>
+
+    </div>
+
+    <div class="container">
+        <div class="container" style="text-align:center">
+            <h3>Longterm total</h3>
+            <img src="total.png" class="img-fluid">
         </div>
     </div>
 

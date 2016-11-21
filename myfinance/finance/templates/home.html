@@ -24,22 +24,25 @@
 
 		<div class="container" style="padding:75px">
 			<div style="text-align:center">
+				<h2>Choose your account or create new</h2>
+			</div>
+			<div style="text-align:center">
 				<form class="form" action="{% url 'home' %}" method="post">
 					{{ form }}
-
-					<button type="submit" class="btn btn-primary btn-lg">Submit</button>
+					<div style="text-align:center">
+						<button type="submit" class="btn btn-primary btn-lg">Submit</button>
+					</div>
 				</form>
 			</div>
 		</div>
 
-
 		<div class="container" style="padding:75px">
 		<div style="text-align:center">
-			<h2>Charge validation sample</h2>
+			<h2>Add account</h2>
 
-			<p>Test our charge adding system.</p>
+			<p>Add new account</p>
 			<div class="control-group">
-			<p style="text-align:center"><a class="btn btn-primary btn-lg" href="/apply/" role="button">Validation form</a></p>
+			<p style="text-align:center"><a class="btn btn-primary btn-lg" href="/addaccount/" role="button">Validation form</a></p>
 			</div>
         </div>
 
