@@ -12,7 +12,7 @@ from datetime import date
 from finance.models import Account, Charge
 from finance.form_validation import ChargeForm, GetAccountsListForm, AccountForm
 from random import randint
-from finance.statistics import getTotalLine
+from finance.statistics import getTotalLine, getTotalTable
 from pathlib import Path
 from django.db import transaction
 
@@ -53,11 +53,20 @@ def send_total(request, account_id):
     return response
 
 
+def total(request, account_id):
+    charges = getTotalTable(account_id)
+    acc = Account.objects.get(account_number=account_id)
+    return render(
+        request, 'total_table.html',
+        {'account': charges, 'account_id': account_id, 'acc': acc}
+    )
+
 
 def account_status(request, account_id=0):
     acc = Account.objects.get(account_number=account_id)
     charges = list(Charge.objects.filter(account=acc.id).order_by('date'))
     getTotalLine(charges, acc.total)
+    #print(charges)
     return render(
         request, 'table.html',
         {'account': charges, 'account_id': account_id, 'acc': acc}
