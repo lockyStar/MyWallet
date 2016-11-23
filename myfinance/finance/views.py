@@ -84,16 +84,25 @@ def add_charge(request, account_id=0):
         info = 'Form is filled, but not correct'
 
         if form.is_valid():
-
             info = 'Form is filled and correct'
             #with transaction.atomic():
             acc = Account.objects.get(account_number=account_id)
             charg = form.save(commit=False)
             charg.account_id = acc.id
-            acc.total += charg.value
-            acc.save()
-            charg.save()
-            return redirect('status', account_id)
+            tot = acc.total + charg.value
+            if tot < 0:
+                info = 'Account total can not be negative'
+                form = ChargeForm(initial={'value': Decimal(100), 'date': date.today()})
+                return render(
+                    request, 'input.html',
+                    {'form': form, 'info': info, 'account_id': account_id}
+                )
+            else:
+                acc.total += charg.value
+                acc.save()
+                charg.save()
+                return redirect('status', account_id)
+
 
     else:
         info = 'Form is not filled'
