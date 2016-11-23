@@ -8,18 +8,21 @@ import pandas as pd
 import datetime
 
 
-def getTotalLine (charges, total):
+def getTotalLine (charges, account):
     # charges = list(Charge.objects.filter(account=account_number).order_by('-date'))
     # total = list(Account.objects.filter(account_number=account_number))
+    total = account.total
     x = []
     y = []
     for charge in reversed(charges):
         x.append(charge.date)
         y.append(total)
         total -= charge.value
-    filename = 'total.jpg'
+    filename = 'total.png'
+    plt.figure(1)
     plt.plot(x, y)
-    plt.savefig('total.png', format='png')
+    plt.title("Account" + str(account.account_number))
+    plt.savefig('static/img/total.png', format='png')
     return filename
 
 
