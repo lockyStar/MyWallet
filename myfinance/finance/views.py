@@ -56,7 +56,7 @@ def send_total(request, account_id):
 def total(request, account_id):
     acc = Account.objects.get(account_number=account_id)
     charges = list(Charge.objects.filter(account=acc.id).order_by('date'))
-    file_name = getTotalLine(charges, acc.total)
+    file_name = getTotalLine(charges, acc)
 
     charges = getTotalTable(account_id)
     acc = Account.objects.get(account_number=account_id)
@@ -84,15 +84,16 @@ def add_charge(request, account_id=0):
         info = 'Form is filled, but not correct'
 
         if form.is_valid():
+
             info = 'Form is filled and correct'
-            with transaction.atomic():
-                acc = Account.objects.get(account_number=account_id)
-                charg = form.save(commit=False)
-                charg.account_id = acc.id
-                acc.total += charg.value
-                acc.save()
-                charg.save()
-                return redirect('status', account_id)
+            #with transaction.atomic():
+            acc = Account.objects.get(account_number=account_id)
+            charg = form.save(commit=False)
+            charg.account_id = acc.id
+            acc.total += charg.value
+            acc.save()
+            charg.save()
+            return redirect('status', account_id)
 
     else:
         info = 'Form is not filled'
