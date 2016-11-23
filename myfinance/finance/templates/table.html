@@ -111,4 +111,13 @@
             </p>
         </div>
     </div>
+
+    <div class="container">
+        <div class="control-group">
+            <p style="text-align:center">
+                {% url 'total_table' account_id as total_stat %}
+                <a class="btn btn-primary btn-lg" href="../..{{total_stat}}" role="button">Show statistic</a>
+            </p>
+        </div>
+    </div>
 {% endblock %}
