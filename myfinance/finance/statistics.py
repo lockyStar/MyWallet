@@ -20,6 +20,7 @@ def getTotalLine (charges, account):
         total -= charge.value
     filename = 'total.png'
     plt.figure(1)
+    plt.clf()
     plt.plot(x, y)
     plt.title("Account" + str(account.account_number))
     plt.savefig('static/img/total.png', format='png')
