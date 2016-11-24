@@ -15,7 +15,7 @@ from random import randint
 from finance.statistics import getTotalLine, getTotalTable
 from pathlib import Path
 from django.db import transaction
-
+import csv
 
 def home(request):
     if request.method == 'POST':
@@ -37,19 +37,13 @@ def random_example(request):
 
 
 def send_total(request, account_id):
-    acc = Account.objects.get(account_number=account_id)
-    charges = list(Charge.objects.filter(account=acc.id).order_by('date'))
-
-    file_name = getTotalLine(charges, acc.total)
-    file = Path(file_name)
-    if os.path.exists(file_name):
-        # response = HttpResponse(FileWrapper(file.getvalue()), content_type='application/pdf')
-        # response['Content-Disposition'] = 'attachment; filename=total.pdf'
-        response = HttpResponse(content_type='application/force-download') # mimetype is replaced by content_type for django 1.7
-        response['Content-Disposition'] = 'attachment; filename=%s' % smart_str(file_name)
-        response['Content-Length'] = ''
-    # It's usually a good idea to set the 'Content-Length' header too.
-    # You can also set any other required headers: Cache-Control, etc.
+    charges = getTotalTable(account_id)
+    response = HttpResponse(content_type='text/csv')
+    response['Content-Disposition'] = 'attachment; filename="Totalstat.csv"'
+    writer = csv.writer(response)
+    writer.writerow(['Year', 'Month', 'Total'])
+    for charge in charges:
+        writer.writerow([charge['year'], charge['mon'], charge['subtotal']])
     return response
 
 
