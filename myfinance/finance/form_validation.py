@@ -31,6 +31,7 @@ class ChargeForm(ModelForm):
         date = self.clean_date()
         print(value)
         print(date)
+
         if (value <= 0)and(date >= date.today()):
             raise ValidationError('You can not spend money in the future')
 
@@ -39,6 +40,7 @@ class AccountForm(ModelForm):
     class Meta:
         model = Account
         fields = ['name','total']
+
     def clean_name(self):
         try:
             name = self.cleaned_data.get('name')
@@ -49,6 +51,8 @@ class AccountForm(ModelForm):
     def clean_total(self):
         try:
             total = self.cleaned_data.get('total')
+            if total < 0:
+                raise ValidationError('Invalid total input')
         except:
             raise ValidationError('Invalid total input')
         return total

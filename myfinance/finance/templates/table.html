@@ -99,7 +99,7 @@
     <div class="container">
         <div class="container" style="text-align:center">
             <h3>Longterm total</h3>
-            <img src="http://127.0.0.1:80/static/total.jpg" alt="My image"/>
+            <img src="http://127.0.0.1:80/static/total.png" alt="My image"/>
         </div>
     </div>
 
@@ -108,6 +108,15 @@
             <p style="text-align:center">
                 {% url 'add_charge' account_id as charge_url %}
                 <a class="btn btn-primary btn-lg" href="../..{{charge_url}}" role="button">Add transaction</a>
+            </p>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="control-group">
+            <p style="text-align:center">
+                {% url 'total_table' account_id as total_stat %}
+                <a class="btn btn-primary btn-lg" href="../..{{total_stat}}" role="button">Show statistic</a>
             </p>
         </div>
     </div>
