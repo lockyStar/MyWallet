@@ -2,14 +2,14 @@ import os
 from wsgiref.util import FileWrapper
 
 from django.http import HttpResponse
-
+from django.contrib.auth.models import User
 from django.shortcuts import render
 from django.shortcuts import redirect
 from django.utils.encoding import smart_str
 from finance import controller
 from decimal import Decimal
 from datetime import date
-from finance.models import Account, Charge
+from finance.models import Account, Charge , UserForm
 from finance.form_validation import ChargeForm, GetAccountsListForm, AccountForm
 from random import randint
 from finance.statistics import getTotalLine, getTotalTable
@@ -136,3 +136,19 @@ def add_account(request):
         )
 
 
+def register(request):
+    if request.method == 'POST':
+        print(3)
+        form = UserForm(request.POST)
+        info = 'Account is filled, but not correct'
+        if form.is_valid():
+            info = 'Account is filled and correct'
+            user = form.save()
+            user.save()
+    else:
+        info = 'Account is not filled'
+        form = UserForm()
+    return render(
+        request, 'register.html',
+        {'form': form, 'info': info}
+        )

@@ -3,6 +3,8 @@ from django.forms import ModelForm
 from datetime import date
 from django.core.exceptions import ValidationError
 from django.db import transaction
+from django.contrib.auth.models import User
+from django.contrib.auth.models import AbstractUser
 
 
 class Account(models.Model):
@@ -27,3 +29,9 @@ class Charge(models.Model):
 
     class Meta:
         db_table = 'charges'
+
+
+class UserForm(ModelForm):
+    class Meta:
+        model = User
+        fields = ['username', 'password']
